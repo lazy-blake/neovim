@@ -3,131 +3,140 @@ return {
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		-- NOTE: Options
-		opts = {
-			styles = {
-				input = {
-					keys = {
-						n_esc = { "<C-c>", { "cmp_close", "cancel" }, mode = "n", expr = true },
-						i_esc = { "<C-c>", { "cmp_close", "stopinsert" }, mode = "i", expr = true },
-					},
-				},
-			},
-			-- Snacks Modules
-			input = {
-				enabled = true,
-			},
-			quickfile = {
-				enabled = true,
-				exclude = { "latex" },
-			},
-			--NOTE: read picker docs @ https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
-			picker = {
-				enabled = true,
-				matchers = {
-					frecency = true,
-					cwd_bonus = false,
-				},
-				formatters = {
-					file = {
-						filename_first = true,
-						filename_only = false,
-						icon_width = 2,
-					},
-				},
-				layout = {
-					-- presets options : "default" , "ivy" , "ivy-split" , "telescope" , "vscode", "select" , "sidebar"
-					-- override picker layout in keymaps function as a param below
-					preset = "telescope", -- defaults to this layout unless overidden
-					cycle = false,
-				},
-				layouts = {
-					select = {
-						preview = false,
-						layout = {
-							backdrop = false,
-							width = 0.6,
-							min_width = 80,
-							height = 0.4,
-							min_height = 10,
-							box = "vertical",
-							border = "rounded",
-							title = "{title}",
-							title_pos = "center",
-							{ win = "input", height = 1, border = "bottom" },
-							{ win = "list", border = "none" },
-							{ win = "preview", title = "{preview}", width = 0.6, height = 0.4, border = "top" },
+		opts = function()
+			local image_path = os.getenv("ASCII_IMAGE_PATH") or ""
+			if image_path == "" then
+				vim.notify("⚠️ ASCII_IMAGE_PATH is not set", vim.log.levels.WARN)
+			end
+
+			local cmd = "ascii-image-converter " .. image_path .. " -C"
+
+			-- NOTE: Options
+			return {
+				styles = {
+					input = {
+						keys = {
+							n_esc = { "<C-c>", { "cmp_close", "cancel" }, mode = "n", expr = true },
+							i_esc = { "<C-c>", { "cmp_close", "stopinsert" }, mode = "i", expr = true },
 						},
 					},
-					telescope = {
-						reverse = false, -- set to false for search bar to be on top
-						layout = {
-							box = "horizontal",
-							backdrop = false,
-							width = 0.8,
-							height = 0.9,
-							border = "none",
-							{
+				},
+				-- Snacks Modules
+				input = {
+					enabled = true,
+				},
+				quickfile = {
+					enabled = true,
+					exclude = { "latex" },
+				},
+				--NOTE: read picker docs @ https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
+				picker = {
+					enabled = true,
+					matchers = {
+						frecency = true,
+						cwd_bonus = false,
+					},
+					formatters = {
+						file = {
+							filename_first = true,
+							filename_only = false,
+							icon_width = 2,
+						},
+					},
+					layout = {
+						-- presets options : "default" , "ivy" , "ivy-split" , "telescope" , "vscode", "select" , "sidebar"
+						-- override picker layout in keymaps function as a param below
+						preset = "telescope", -- defaults to this layout unless overidden
+						cycle = false,
+					},
+					layouts = {
+						select = {
+							preview = false,
+							layout = {
+								backdrop = false,
+								width = 0.6,
+								min_width = 80,
+								height = 0.4,
+								min_height = 10,
 								box = "vertical",
-								{ win = "list", title = " Results ", title_pos = "center", border = "rounded" },
+								border = "rounded",
+								title = "{title}",
+								title_pos = "center",
+								{ win = "input", height = 1, border = "bottom" },
+								{ win = "list", border = "none" },
+								{ win = "preview", title = "{preview}", width = 0.6, height = 0.4, border = "top" },
+							},
+						},
+						telescope = {
+							reverse = false, -- set to false for search bar to be on top
+							layout = {
+								box = "horizontal",
+								backdrop = false,
+								width = 0.8,
+								height = 0.9,
+								border = "none",
 								{
-									win = "input",
-									height = 1,
+									box = "vertical",
+									{ win = "list", title = " Results ", title_pos = "center", border = "rounded" },
+									{
+										win = "input",
+										height = 1,
+										border = "rounded",
+										title = "{title} {live} {flags}",
+										title_pos = "center",
+									},
+								},
+								{
+									win = "preview",
+									title = "{preview:Preview}",
+									width = 0.50,
 									border = "rounded",
-									title = "{title} {live} {flags}",
 									title_pos = "center",
 								},
 							},
-							{
-								win = "preview",
-								title = "{preview:Preview}",
-								width = 0.50,
-								border = "rounded",
-								title_pos = "center",
-							},
 						},
-					},
-					ivy = {
-						layout = {
-							box = "vertical",
-							backdrop = false,
-							width = 0,
-							height = 0.4,
-							position = "bottom",
-							border = "top",
-							title = " {title} {live} {flags}",
-							title_pos = "left",
-							{ win = "input", height = 1, border = "bottom" },
-							{
-								box = "horizontal",
-								{ win = "list", border = "none" },
-								{ win = "preview", title = "{preview}", width = 0.5, border = "left" },
+						ivy = {
+							layout = {
+								box = "vertical",
+								backdrop = false,
+								width = 0,
+								height = 0.4,
+								position = "bottom",
+								border = "top",
+								title = " {title} {live} {flags}",
+								title_pos = "left",
+								{ win = "input", height = 1, border = "bottom" },
+								{
+									box = "horizontal",
+									{ win = "list", border = "none" },
+									{ win = "preview", title = "{preview}", width = 0.5, border = "left" },
+								},
 							},
 						},
 					},
 				},
-			},
-			-- to set up custom dashboard
-			dashboard = {
-				enabled = true,
-				center = true, -- ✅ this already centers vertically across both panes
-				sections = {
-					{
-						section = "terminal",
-						cmd = "ascii-image-converter C:/Users/akash/OneDrive/Desktop/data/ascii/luffy.jpg -C ",
-						height = 28,
-						padding = 2,
-						random = 15,
-					},
-					{
-						pane = 2,
-						{ section = "header" },
-						{ section = "keys", gap = 1, padding = 1 },
-						{ section = "startup" },
+				-- to set up custom dashboard
+				dashboard = {
+					enabled = true,
+					center = true,
+					sections = {
+						{
+							section = "terminal",
+							cmd = cmd, -- enter your image path here
+							height = 28,
+							padding = 2,
+							random = 15,
+						},
+						{
+							pane = 2,
+							{ section = "header" },
+							{ section = "keys", gap = 1, padding = 1 },
+							{ section = "startup" },
+						},
 					},
 				},
-			},
-		},
+			}
+		end,
 
 		keys = {
 			{
