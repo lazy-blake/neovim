@@ -13,7 +13,7 @@
 ## 🖼️ Preview
 
 <p align="center">
-  <img src= ""width="800"/>
+  <img src=<img width="1883" height="963" alt="Screenshot 2025-08-07 140803" src="https://github.com/user-attachments/assets/5ce6baec-85c8-45c4-9392-58c1293cbc4e" ""width="800"/>
 </p>
 
 > ✨ Featuring `snacks.nvim` + `ascii-image-converter` powered dashboard with live ASCII art preview!
