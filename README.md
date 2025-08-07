@@ -1,4 +1,4 @@
-# ⚡ lazy-blake Neovim Config
+# ⚡ Neovim Config
 
 ![Neovim](https://img.shields.io/badge/Neovim-0.9+-57A143?style=for-the-badge&logo=neovim&logoColor=white)
 ![License](https://img.shields.io/github/license/lazy-blake/neovim?style=for-the-badge)
