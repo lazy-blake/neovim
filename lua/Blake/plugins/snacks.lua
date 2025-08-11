@@ -1,3 +1,5 @@
+local quotes = require("Blake.custom.quotes")
+
 return {
 	{ -- snacks nvim setup for dashboard, custom layout for finding files, grep words,telescope, keymaps to jump between todo comments etc
 		"folke/snacks.nvim",
@@ -126,12 +128,24 @@ return {
 							height = 28,
 							padding = 2,
 							random = 15,
+
+							--NOTE: custom quotes section, comment it if you dont want
+							{
+								title = "Today's Quote",
+								type = "text",
+								padding = 1,
+								gap = 1,
+								height = 10,
+								text = quotes.get_random_quote() or "Could not load quote.",
+								opts = { hl = "Comment", position = "center" },
+							},
 						},
 						{
 							pane = 2,
 							{ section = "header" },
 							{ section = "keys", gap = 1, padding = 1 },
 							{ section = "startup" },
+							-- Custom Quotes section
 						},
 					},
 				},

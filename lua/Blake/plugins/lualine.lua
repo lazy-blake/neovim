@@ -89,13 +89,12 @@ return {
 			function()
 				return require("battery").get_status_line()
 			end,
-			color = { fg = colors.color2, bg = colors.color3 },
 		}
 
 		lualine.setup({
 			icons_enabled = true,
 			options = {
-				theme = my_lualine_theme,
+				theme = "nightly",
 				component_separators = { left = "|", right = "|" },
 				section_separators = { left = "|", right = "|" },
 			},

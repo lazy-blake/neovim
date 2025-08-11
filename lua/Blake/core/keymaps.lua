@@ -12,17 +12,14 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "move down in buffer with currs
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "move down in buffer with currsor centerd" })
 
 -- for indentation
-vim.keymap.set("v", "<", "<gv", opts)
-vim.keymap.set("v", ">", ">gv", opts)
+vim.keymap.set("v", "<", "<gv", opt)
+vim.keymap.set("v", ">", ">gv", opt)
 
 vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "paste without loosing clipboard content" })
 
 -- remember yanked
-vim.keymap.set("v", "p", '"_dp', opts) -- prevent pasting to replacing my clipboared
+vim.keymap.set("v", "p", '"_dp', opt) -- prevent pasting to replacing my clipboared
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "delete without copying" })
-
--- ctrl c as escape cuz Im lazy to reach up to the esc key
-vim.keymap.set("i", "<C-c>", "<Esc>")
 
 -- format without prettier using the built in
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
@@ -30,14 +27,32 @@ vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 -- Unmaps Q in normal mode
 vim.keymap.set("n", "Q", "<nop>")
 
+--NOTE: to disable arrow keys for every mode
+local function disable_arrow(mode, key)
+	vim.keymap.set(mode, key, "<Nop>", opt)
+end
+
+for _, mode in ipairs({ "n", "i", "v" }) do
+	disable_arrow(mode, "<Up>")
+	disable_arrow(mode, "<Down>")
+	disable_arrow(mode, "<Left>")
+	disable_arrow(mode, "<Right>")
+end
+
 -- delete certain character without copying it to clipboard
-vim.keymap.set("n", "x", '"_x', opts)
+vim.keymap.set("n", "x", '"_x', opt)
+
+-- jk as escape cuz Im lazy to reach up to the esc key
+vim.keymap.set("i", "jk", "<Esc>", opt)
+vim.keymap.set("v", "jk", "<Esc>", opt)
+vim.keymap.set("n", "jk", "<Esc>", opt)
+vim.keymap.set("c", "jk", "<Esc>", opt)
 
 vim.keymap.set(
 	"n",
 	"<leader>s",
 	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-	{ desc = "Replace word, cursor is on globally. Can change every instances of that word in that buffer" }
+	{ desc = "Replace the word, cursor is on globally. Can change every instances of that word in that buffer" }
 )
 
 -- Executes shell command from in here making file executable

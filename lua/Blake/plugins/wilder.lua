@@ -26,12 +26,12 @@ return {
 					default = wilder.make_hl(
 						"WilderPopupMenu",
 						"Pmenu",
-						{ { a = 1 }, { a = 1 }, { background = "#3c3836", foreground = "#ebdbb2" } } -- Adjust background color
+						{ { a = 1 }, { a = 1 }, { background = "#1a1b26", foreground = "#c0caf5" } } -- Adjust background color
 					),
 					accent = wilder.make_hl(
 						"WilderAccent",
 						"Pmenu",
-						{ { a = 1 }, { a = 1 }, { foreground = "#fabd2f", background = "#282828" } }
+						{ { a = 1 }, { a = 1 }, { foreground = "#7aa2f7", background = "#1f2335" } }
 					),
 				},
 				-- 'single', 'double', 'rounded' or 'solid'
