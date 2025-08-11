@@ -47,6 +47,7 @@ nvim/
 │   └── Blake/                # All custom Lua config
 │       ├── core/             # Core: keymaps, options, base init
 │       └── plugins/          # Plugin configs (LSP, UI, utilities)
+|       └── custom/           # Quotes config for the dashboard
 ├── init.lua                  # Entry point (loads Blake.core and plugins)
 ├── lazy-lock.json            # Lazy.nvim plugin lockfile
 
