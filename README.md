@@ -1,4 +1,4 @@
-# ⚡ lazy-blake Neovim Config
+# ⚡ Neovim Config
 
 ![Neovim](https://img.shields.io/badge/Neovim-0.9+-57A143?style=for-the-badge&logo=neovim&logoColor=white)
 ![License](https://img.shields.io/github/license/lazy-blake/neovim?style=for-the-badge)
@@ -13,8 +13,9 @@
 ## 🖼️ Preview
 
 <p align="center">
-  <img src= ""width="800"/>
+  <img width="1883" height="963" alt="Screenshot 2025-08-07 140803" src="https://github.com/user-attachments/assets/38419f49-c5f2-40aa-9e82-51fad71a0bb2" />
 </p>
+
 
 > ✨ Featuring `snacks.nvim` + `ascii-image-converter` powered dashboard with live ASCII art preview!
 
