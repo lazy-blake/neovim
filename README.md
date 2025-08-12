@@ -13,7 +13,7 @@
 ## 🖼️ Preview
 
 <p align="center">
-  <img width="1908" height="1052" alt="image" src="https://github.com/user-attachments/assets/83bb3347-c9c1-49ee-b110-733ffa9e5671" />
+  <img width="1911" height="1067" alt="Screenshot 2025-08-12 133236" src="https://github.com/user-attachments/assets/e2807a33-836a-476d-8a6c-5cef151ba960" />
 </p>
 
 
