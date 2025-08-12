@@ -13,7 +13,7 @@
 ## 🖼️ Preview
 
 <p align="center">
-  <img width="1883" height="963" alt="Screenshot 2025-08-07 140803" src="https://github.com/user-attachments/assets/38419f49-c5f2-40aa-9e82-51fad71a0bb2" />
+  <img width="1911" height="1067" alt="Screenshot 2025-08-12 133236" src="https://github.com/user-attachments/assets/e2807a33-836a-476d-8a6c-5cef151ba960" />
 </p>
 
 
@@ -47,6 +47,7 @@ nvim/
 │   └── Blake/                # All custom Lua config
 │       ├── core/             # Core: keymaps, options, base init
 │       └── plugins/          # Plugin configs (LSP, UI, utilities)
+|       └── custom/           # Quotes config for the dashboard
 ├── init.lua                  # Entry point (loads Blake.core and plugins)
 ├── lazy-lock.json            # Lazy.nvim plugin lockfile
 
