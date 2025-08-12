@@ -5,7 +5,9 @@ return {
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		opts = function()
+		dependencies = { "nightly" },
+		--  sets the image path for the ascii
+		config = function()
 			local image_path = os.getenv("ASCII_IMAGE_PATH") or ""
 			if image_path == "" then
 				vim.notify("⚠️ ASCII_IMAGE_PATH is not set", vim.log.levels.WARN)
@@ -13,8 +15,40 @@ return {
 
 			local cmd = "ascii-image-converter " .. image_path .. " -C"
 
+			--NOTE: A function to wrap long text into multiple lines
+			local function wrap_text_to_string(str, max_width)
+				-- Handle cases where the quote might be missing
+				if not str or str == "" then
+					return "Failed to load a quote."
+				end
+
+				-- :gsub() works as replace
+				str = str:gsub("\n", " ")
+				local lines = {}
+				local current_line = ""
+				-- this function goes through the string and find every word ("%S+" : Find one or more (+) non-whitespace characters (\S))
+				for word in string.gmatch(str, "%S+") do
+					-- only works when one line exceedes the mentioned max_width
+					if #current_line > 0 and #current_line + #word + 1 > max_width then
+						table.insert(lines, current_line)
+						current_line = word
+					else
+						--building the current_line by appending the word
+						if #current_line > 0 then
+							current_line = current_line .. " " .. word
+						else
+							current_line = word
+						end
+					end
+				end
+				table.insert(lines, current_line)
+
+				-- Join the lines into one string with newline characters.
+				return table.concat(lines, "\n")
+			end
+
 			-- NOTE: Options
-			return {
+			require("snacks").setup({
 				styles = {
 					input = {
 						keys = {
@@ -126,20 +160,31 @@ return {
 							section = "terminal",
 							cmd = cmd, -- enter your image path here
 							height = 28,
-							padding = 2,
+							padding = 1,
 							random = 15,
-
-							--NOTE: custom quotes section, comment it if you dont want
-							{
-								title = "Today's Quote",
-								type = "text",
-								padding = 1,
-								gap = 1,
-								height = 10,
-								text = quotes.get_random_quote() or "Could not load quote.",
-								opts = { hl = "Comment", position = "center" },
+						},
+						--NOTE: custom quotes section, comment it if you dont want
+						{
+							-- SECTION 1: THE TITLE
+							type = "text",
+							text = "Today's Quote",
+							padding = 1,
+							opts = {
+								hl = "DashboardTitle", -- Use the title highlight
+								align = "center",
 							},
 						},
+						{
+							-- SECTION 2: THE QUOTE
+							type = "text",
+							text = wrap_text_to_string(quotes.get_random_quote(), 55),
+							opts = {
+								hl = "DashboardQuote", -- Use the quote highlight
+								align = "center",
+								padding = { top = 1, bottom = 2 }, -- Add some space
+							},
+						},
+
 						{
 							pane = 2,
 							{ section = "header" },
@@ -149,7 +194,7 @@ return {
 						},
 					},
 				},
-			}
+			})
 		end,
 
 		keys = {
