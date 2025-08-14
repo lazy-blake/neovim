@@ -8,6 +8,30 @@ return {
 	},
 	config = function()
 		-- NOTE: LSP Keybinds
+		-- Enhanced signature help configuration
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = vim.api.nvim_create_augroup("LspSignatureHelp", { clear = true }),
+			callback = function(ev)
+				local client = vim.lsp.get_client_by_id(ev.data.client_id)
+				if client and client.server_capabilities.signatureHelpProvider then
+					-- Auto-trigger signature help in insert mode
+					vim.api.nvim_create_autocmd({ "CursorHoldI" }, {
+						buffer = ev.buf,
+						callback = function()
+							local line = vim.api.nvim_get_current_line()
+							local col = vim.api.nvim_win_get_cursor(0)[2]
+							if col > 0 then
+								local char = line:sub(col, col)
+								local prev_char = line:sub(col - 1, col - 1)
+								if char == "(" or prev_char == "(" or char == "," then
+									vim.lsp.buf.signature_help()
+								end
+							end
+						end,
+					})
+				end
+			end,
+		})
 
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -154,22 +178,99 @@ return {
 			},
 		})
 
-		-- Python: Add pyright
+		-- Enhanced Python: pyright with comprehensive settings
+		-- First, define the helper function at the top of your config function
+		local function get_python_path()
+			-- Check for virtual environment first
+			local venv = vim.fn.getenv("VIRTUAL_ENV")
+			if venv and venv ~= vim.NIL then
+				return venv .. "/bin/python"
+			end
+
+			-- Check for conda environment (popular in data science workflows)
+			local conda_env = vim.fn.getenv("CONDA_DEFAULT_ENV")
+			if conda_env and conda_env ~= vim.NIL and conda_env ~= "base" then
+				return vim.fn.getenv("CONDA_PREFIX") .. "/bin/python"
+			end
+
+			-- Fallback to system python (when no virtual environment is active)
+			return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+		end
+
+		-- Then, replace your current pyright setup with this complete version
 		lspconfig.pyright.setup({
 			capabilities = capabilities,
-			on_attach = function(client, _)
+			on_attach = function(client, bufnr)
 				-- Prevent LSP from handling formatting since conform does it
 				client.server_capabilities.documentFormattingProvider = false
 				client.server_capabilities.documentRangeFormattingProvider = false
+
+				-- Enable signature help on function calls
+				client.server_capabilities.signatureHelpProvider = {
+					triggerCharacters = { "(", "," },
+					retriggerCharacters = { "," },
+				}
 			end,
 			settings = {
 				python = {
+					-- This is the new pythonPath setting that tells Pyright which Python interpreter to use
+					pythonPath = get_python_path(),
+
+					-- All these settings work together to give you comprehensive Python analysis
 					analysis = {
-						typeCheckingMode = "basic", -- or "strict"
-						autoImportCompletions = true,
+						typeCheckingMode = "basic", -- How strict should type checking be
+						autoImportCompletions = true, -- Automatically suggest imports
+						autoSearchPaths = true, -- Automatically find Python packages
+						useLibraryCodeForTypes = true, -- Analyze library source code for better completions
+						diagnosticMode = "workspace", -- Analyze your entire project, not just open files
+
+						-- These settings dramatically improve completion quality
+						completeFunctionParens = true, -- Add parentheses when completing function names
+						indexing = true, -- Build an index of your codebase for faster searches
+						packageIndexDepths = {
+							{
+								name = "",
+								depth = 2,
+								includeAllSymbols = true, -- Include all available symbols in completions
+							},
+						},
+
+						-- Paths for finding type information
+						stubPath = "typings",
+						typeshedPaths = {},
+						extraPaths = {},
+					},
+
+					-- Linting configuration that works alongside completion
+					linting = {
+						enabled = true,
+						pylintEnabled = false, -- Disable if you use other linters like flake8
+						flake8Enabled = false,
+						mypyEnabled = false,
 					},
 				},
+
+				-- Global pyright settings that affect overall behavior
+				pyright = {
+					disableLanguageServices = false, -- Keep all language features enabled
+					disableOrganizeImports = false, -- Allow Pyright to organize imports
+				},
 			},
+
+			-- Root directory detection helps Pyright understand your project structure
+			root_dir = function(fname)
+				local util = lspconfig.util
+				return util.root_pattern(
+					"pyproject.toml", -- Modern Python project configuration
+					"setup.py", -- Traditional Python package setup
+					"setup.cfg", -- Alternative setup configuration
+					"requirements.txt", -- Dependency specifications
+					"Pipfile", -- Pipenv environment
+					"pyrightconfig.json", -- Pyright-specific configuration
+					".git" -- Git repository root
+				)(fname)
+			end,
+			single_file_support = true, -- Allow Pyright to work on standalone Python files
 		})
 	end,
 }

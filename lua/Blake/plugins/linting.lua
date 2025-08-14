@@ -28,10 +28,13 @@ return {
 		}
 
 		--auto command for linting
-		vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+		vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave", "TextChanged" }, {
 			group = lint_augroup,
 			callback = function()
-				lint.try_lint()
+				-- Small delay to avoid conflicts with LSP analysis
+				vim.defer_fn(function()
+					lint.try_lint()
+				end, 100)
 			end,
 		})
 

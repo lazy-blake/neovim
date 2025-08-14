@@ -1,6 +1,6 @@
 # ⚡ Neovim Config
 
-![Neovim](https://img.shields.io/badge/Neovim-0.9+-57A143?style=for-the-badge&logo=neovim&logoColor=white)
+![Neovim](https://img.shields.io/badge/Neovim-0.10+-57A143?style=for-the-badge&logo=neovim&logoColor=white)
 ![License](https://img.shields.io/github/license/lazy-blake/neovim?style=for-the-badge)
 ![Stars](https://img.shields.io/github/stars/lazy-blake/neovim?style=for-the-badge)
 ![Issues](https://img.shields.io/github/issues/lazy-blake/neovim?style=for-the-badge)
@@ -16,24 +16,23 @@
   <img width="1911" height="1067" alt="Screenshot 2025-08-12 133236" src="https://github.com/user-attachments/assets/e2807a33-836a-476d-8a6c-5cef151ba960" />
 </p>
 
-
 > ✨ Featuring `snacks.nvim` + `ascii-image-converter` powered dashboard with live ASCII art preview!
 
 ---
 
 ## 📦 Plugin Highlights
 
-| Feature              | Plugin(s) Involved |
-|----------------------|--------------------|
-| 🚀 Lazy Loading       | [`lazy.nvim`](https://github.com/folke/lazy.nvim) |
-| 🎨 UI / Theme         | `dressing.nvim`, `bufferline.nvim`, `lualine.nvim`, `noice.nvim` |
-| 📦 LSP Support        | `nvim-lspconfig`, `mason.nvim`, `null-ls`, `nvim-cmp` |
-| 🧠 Treesitter         | `nvim-treesitter` |
-| 🌈 Indentation + UI   | `indent-blankline.nvim`, `which-key.nvim` |
-| 📁 File Explorer      | `nvim-tree.lua` |
-| 💡 Code Enhancements | `auto-pairs`, `todo-comments`, `flash.nvim`, `render-markdown` |
-| 🎨 Custom Dashboard   | `snacks.nvim` with ASCII preview integration |
-| 💻 Dev Utilities      | `undo-tree`, `tailwind-tools`, `bufferline`, `sessions`, `wilder` |
+| Feature              | Plugin(s) Involved                                                |
+| -------------------- | ----------------------------------------------------------------- |
+| 🚀 Lazy Loading      | [`lazy.nvim`](https://github.com/folke/lazy.nvim)                 |
+| 🎨 UI / Theme        | `dressing.nvim`, `bufferline.nvim`, `lualine.nvim`, `noice.nvim`  |
+| 📦 LSP Support       | `nvim-lspconfig`, `mason.nvim`, `null-ls`, `nvim-cmp`             |
+| 🧠 Treesitter        | `nvim-treesitter`                                                 |
+| 🌈 Indentation + UI  | `indent-blankline.nvim`, `which-key.nvim`                         |
+| 📁 File Explorer     | `nvim-tree.lua`                                                   |
+| 💡 Code Enhancements | `auto-pairs`, `todo-comments`, `flash.nvim`, `render-markdown`    |
+| 🎨 Custom Dashboard  | `snacks.nvim` with ASCII preview integration                      |
+| 💻 Dev Utilities     | `undo-tree`, `tailwind-tools`, `bufferline`, `sessions`, `wilder` |
 
 ---
 
@@ -51,7 +50,7 @@ nvim/
 ├── init.lua                  # Entry point (loads Blake.core and plugins)
 ├── lazy-lock.json            # Lazy.nvim plugin lockfile
 
-````
+```
 
 Modular, easy to maintain and extend.
 
@@ -69,7 +68,7 @@ Modular, easy to maintain and extend.
 
 ```bash
 git clone https://github.com/lazy-blake/neovim ~/.config/nvim
-````
+```
 
 Launch Neovim and Lazy will handle the rest:
 
@@ -83,6 +82,7 @@ nvim
 
 You can show an image in ASCII on the dashboard with:
 "C:\Users\akash\OneDrive\Pictures\Screenshots\Screenshot 2025-08-07 140803.png"
+
 ```lua
 cmd = "ascii-image-converter path/to/image.jpg -C"
 ```
@@ -109,8 +109,8 @@ To update all plugins:
 
 ## 💡 Inspirations
 
-* [LazyVim](https://github.com/LazyVim/LazyVim)
-* [NvChad](https://github.com/NvChad/NvChad)
+- [LazyVim](https://github.com/LazyVim/LazyVim)
+- [NvChad](https://github.com/NvChad/NvChad)
 
 ---
 
@@ -121,6 +121,3 @@ This config is open-sourced under the [MIT License](LICENSE).
 ---
 
 > Made with ❤️ by [@lazy-blake](https://github.com/lazy-blake)
-
-
-
