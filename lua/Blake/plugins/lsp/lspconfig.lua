@@ -179,7 +179,6 @@ return {
 		})
 
 		-- Enhanced Python: pyright with comprehensive settings
-		-- First, define the helper function at the top of your config function
 		local function get_python_path()
 			-- Check for virtual environment first
 			local venv = vim.fn.getenv("VIRTUAL_ENV")
@@ -187,7 +186,7 @@ return {
 				return venv .. "/bin/python"
 			end
 
-			-- Check for conda environment (popular in data science workflows)
+			-- Check for conda environment
 			local conda_env = vim.fn.getenv("CONDA_DEFAULT_ENV")
 			if conda_env and conda_env ~= vim.NIL and conda_env ~= "base" then
 				return vim.fn.getenv("CONDA_PREFIX") .. "/bin/python"
@@ -197,7 +196,6 @@ return {
 			return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
 		end
 
-		-- Then, replace your current pyright setup with this complete version
 		lspconfig.pyright.setup({
 			capabilities = capabilities,
 			on_attach = function(client, bufnr)
@@ -244,7 +242,7 @@ return {
 					-- Linting configuration that works alongside completion
 					linting = {
 						enabled = true,
-						pylintEnabled = false, -- Disable if you use other linters like flake8
+						pylintEnabled = false, -- Disable if you use other linters like ruff
 						flake8Enabled = false,
 						mypyEnabled = false,
 					},
