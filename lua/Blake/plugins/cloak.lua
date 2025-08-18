@@ -15,14 +15,6 @@ return {
 					},
 					cloak_pattern = "=.+",
 				},
-				{
-					-- Python files - separate pattern
-					file_pattern = "*.py",
-					cloak_pattern = {
-						'=%s*".*"', -- Matches = "anything"
-						"=%s*'.*'", -- Matches = 'anything'
-					},
-				},
 			},
 		})
 	end,

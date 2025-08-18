@@ -6,6 +6,8 @@ vim.g.maplocalleader = " "
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "moves lines down in visual selection" }) -- vim.keymap.set({mode}, {lhs}, {rhs}, {options})
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "moves lines up in visual selection" })
+vim.keymap.set("v", "H", ":s/\\%V //<CR>gv", { desc = "move selected text left one space" })
+vim.keymap.set("v", "L", ":s/\\%V./ &/<CR>gv", { desc = "move selected text right one space" })
 
 vim.keymap.set("n", "J", "mzJ`z", { desc = "join current line with the line below" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "move down in buffer with currsor centerd" })

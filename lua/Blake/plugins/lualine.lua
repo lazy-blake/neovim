@@ -55,6 +55,15 @@ return {
 				return " " .. str
 			end,
 		}
+		local diagnostics = {
+			"diagnostics",
+			sources = { "nvim_diagnostic" },
+			sections = { "error", "warn" },
+			symbols = { error = " ", warn = " ", info = " ", hint = " " },
+			colored = true,
+			update_in_insert = true,
+			always_visible = true,
+		}
 
 		local diff = {
 			"diff",
@@ -67,29 +76,10 @@ return {
 			"filename",
 			file_status = true,
 			path = 0,
+			colored = true,
 		}
 
 		local branch = { "branch", icon = { "", color = { fg = "#A6D4DE" } }, "|" }
-
-		-- default battery-nvim config
-		--NOTE: check https://github.com/justinhj/battery.nvim repo for more info
-		local battery = require("battery")
-
-		battery.setup({
-			update_rate_seconds = 30, -- Number of seconds between checking battery status
-			show_status_when_no_battery = true, -- Don't show any icon or text when no battery found (desktop for example)
-			show_plugged_icon = true, -- If true show a cable icon alongside the battery icon when plugged in
-			show_unplugged_icon = true, -- When true show a diconnected cable icon when not plugged in
-			show_percent = true, -- Whether or not to show the percent charge remaining in digits
-			vertical_icons = true, -- When true icons are vertical, otherwise shows horizontal battery icon
-			multiple_battery_selection = 1, -- Which battery to choose when multiple found. "max" or "maximum", "min" or "minimum" or a number to pick the nth battery found (currently linux acpi only)
-		})
-
-		local nvimbattery = {
-			function()
-				return require("battery").get_status_line()
-			end,
-		}
 
 		lualine.setup({
 			icons_enabled = true,
@@ -101,7 +91,7 @@ return {
 			sections = {
 				lualine_a = { mode },
 				lualine_b = { branch },
-				lualine_c = { diff, filename },
+				lualine_c = { diff, filename, diagnostics },
 				lualine_x = {
 					{
 						-- require("noice").api.statusline.mode.get,
@@ -113,7 +103,6 @@ return {
 					-- { "encoding",},
 					-- { "fileformat" },
 					{ "filetype" },
-					nvimbattery,
 				},
 				--NOTE: to show the clock, you can remove this line if you dont want that
 				lualine_z = { "time" },
