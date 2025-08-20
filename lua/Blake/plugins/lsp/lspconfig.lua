@@ -39,6 +39,7 @@ return {
 			callback = function(ev)
 				-- Buffer local mappings
 				-- Check `:help vim.lsp.*` for documentation on any of the below functions
+				--
 				local opts = { buffer = ev.buf, silent = true }
 
 				-- keymaps
@@ -48,8 +49,10 @@ return {
 				opts.desc = "Go to declaration"
 				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
 
+				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts) -- go to declaration
+
 				opts.desc = "Show LSP definitions"
-				vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+				vim.keymap.set("n", "gdd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
 
 				opts.desc = "Show LSP implementations"
 				vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
@@ -85,7 +88,7 @@ return {
 
 		-- Define sign icons for each severity
 		local signs = {
-			[vim.diagnostic.severity.ERROR] = " ",
+			[vim.diagnostic.severity.ERROR] = " ",
 			[vim.diagnostic.severity.WARN] = " ",
 			[vim.diagnostic.severity.HINT] = "󰠠 ",
 			[vim.diagnostic.severity.INFO] = " ",
