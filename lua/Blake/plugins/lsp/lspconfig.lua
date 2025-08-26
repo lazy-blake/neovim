@@ -224,18 +224,11 @@ return {
 						autoImportCompletions = true, -- Automatically suggest imports
 						autoSearchPaths = true, -- Automatically find Python packages
 						useLibraryCodeForTypes = true, -- Analyze library source code for better completions
-						diagnosticMode = "workspace", -- Analyze your entire project, not just open files
+						diagnosticMode = "openFilesOnly", -- Analyze just open files
 
 						-- These settings dramatically improve completion quality
 						completeFunctionParens = true, -- Add parentheses when completing function names
 						indexing = true, -- Build an index of your codebase for faster searches
-						packageIndexDepths = {
-							{
-								name = "",
-								depth = 2,
-								includeAllSymbols = true, -- Include all available symbols in completions
-							},
-						},
 
 						-- Paths for finding type information
 						stubPath = "typings",
