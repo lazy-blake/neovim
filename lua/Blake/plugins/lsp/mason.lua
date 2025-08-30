@@ -47,7 +47,6 @@ return {
 				"isort", -- python formatter
 				"clangd",
 				"denols",
-				"black", -- python code formatter
 				"mypy",
 				"ruff", -- linter/formatter
 				"eslint_d",
