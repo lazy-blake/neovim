@@ -181,6 +181,30 @@ return {
 				},
 			},
 		})
+		-- css
+		lspconfig.cssls.setup({
+			capabilities = require("cmp_nvim_lsp").default_capabilities(),
+			settings = {
+				css = {
+					validate = true,
+					lint = {
+						unknownAtRules = "ignore",
+					},
+				},
+				scss = {
+					validate = true,
+					lint = {
+						unknownAtRules = "ignore",
+					},
+				},
+				less = {
+					validate = true,
+					lint = {
+						unknownAtRules = "ignore",
+					},
+				},
+			},
+		})
 
 		-- Enhanced Python: pyright with comprehensive settings
 		local function get_python_path()
