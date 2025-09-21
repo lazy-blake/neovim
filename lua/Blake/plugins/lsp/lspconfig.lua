@@ -3,12 +3,10 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
-		-- "saghen/blink.cmp",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		{ "j-hui/fidget.nvim", config = true },
 	},
 	config = function()
-		-- NOTE: LSP Keybinds
 		-- Enhanced signature help configuration
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("LspSignatureHelp", { clear = true }),
@@ -38,47 +36,45 @@ return {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
 				-- Buffer local mappings
-				-- Check `:help vim.lsp.*` for documentation on any of the below functions
-				--
 				local opts = { buffer = ev.buf, silent = true }
 
 				-- keymaps
 				opts.desc = "Show LSP references"
-				vim.keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+				vim.keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
 
 				opts.desc = "Go to declaration"
-				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 
-				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts) -- go to declaration
+				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
 
 				opts.desc = "Show LSP definitions"
-				vim.keymap.set("n", "gdd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+				vim.keymap.set("n", "gdd", "<cmd>Telescope lsp_definitions<CR>", opts)
 
 				opts.desc = "Show LSP implementations"
-				vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+				vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
 
 				opts.desc = "Show LSP type definitions"
-				vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+				vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
 
 				opts.desc = "See available code actions"
 				vim.keymap.set({ "n", "v" }, "<leader>ca", function()
 					vim.lsp.buf.code_action()
-				end, opts) -- see available code actions, in visual mode will apply to selection
+				end, opts)
 
 				opts.desc = "Smart rename"
-				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
+				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
 				opts.desc = "Show buffer diagnostics"
-				vim.keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+				vim.keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
 
 				opts.desc = "Show line diagnostics"
-				vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
+				vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
 				opts.desc = "Show documentation for what is under cursor"
-				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
+				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
 				opts.desc = "Restart LSP"
-				vim.keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+				vim.keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
 
 				vim.keymap.set("i", "<C-h>", function()
 					vim.lsp.buf.signature_help()
@@ -97,21 +93,38 @@ return {
 		-- Set the diagnostic config with all icons
 		vim.diagnostic.config({
 			signs = {
-				text = signs, -- Enable signs in the gutter
+				text = signs,
 			},
-			virtual_text = true, -- Specify Enable virtual text for diagnostics
-			underline = true, -- Specify Underline diagnostics
-			update_in_insert = false, -- Keep diagnostics active in insert mode
+			virtual_text = true,
+			underline = true,
+			update_in_insert = false,
 		})
 
-		-- Setup servers
-		local lspconfig = require("lspconfig")
+		-- Get capabilities for autocompletion
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 		local capabilities = cmp_nvim_lsp.default_capabilities()
+		local lspconfig_util = require("lspconfig").util
 
-		-- Config lsp servers here
-		-- lua_ls
-		lspconfig.lua_ls.setup({
+		-- Enhanced Python path detection
+		local function get_python_path()
+			local venv = vim.fn.getenv("VIRTUAL_ENV")
+			if venv and venv ~= vim.NIL then
+				return venv .. "/bin/python"
+			end
+
+			local conda_env = vim.fn.getenv("CONDA_DEFAULT_ENV")
+			if conda_env and conda_env ~= vim.NIL and conda_env ~= "base" then
+				return vim.fn.getenv("CONDA_PREFIX") .. "/bin/python"
+			end
+
+			return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+		end
+
+		-- Configure LSP servers using the new vim.lsp.config API
+
+		-- Lua Language Server
+		vim.lsp.config["lua_ls"] = {
+			cmd = { "lua-language-server" },
 			capabilities = capabilities,
 			settings = {
 				Lua = {
@@ -129,10 +142,11 @@ return {
 					},
 				},
 			},
-		})
+		}
 
-		-- emmet_language_server
-		lspconfig.emmet_language_server.setup({
+		-- Emmet Language Server
+		vim.lsp.config["emmet_language_server"] = {
+			cmd = { "emmet-language-server", "--stdio" },
 			capabilities = capabilities,
 			filetypes = {
 				"css",
@@ -157,22 +171,20 @@ return {
 				syntaxProfiles = {},
 				variables = {},
 			},
-		})
+		}
 
-		-- denols
-		lspconfig.denols.setup({
+		-- Deno Language Server
+		vim.lsp.config["denols"] = {
+			cmd = { "deno", "lsp" },
 			capabilities = capabilities,
-			root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
-		})
+			root_markers = { "deno.json", "deno.jsonc" },
+		}
 
-		-- ts_ls (replaces tsserver)
-		lspconfig.ts_ls.setup({
+		-- TypeScript Language Server
+		vim.lsp.config["ts_ls"] = {
+			cmd = { "typescript-language-server", "--stdio" },
 			capabilities = capabilities,
-			root_dir = function(fname)
-				local util = lspconfig.util
-				return not util.root_pattern("deno.json", "deno.jsonc")(fname)
-					and util.root_pattern("tsconfig.json", "package.json", "jsconfig.json", ".git")(fname)
-			end,
+			root_markers = { "tsconfig.json", "package.json", "jsconfig.json", ".git" },
 			single_file_support = false,
 			init_options = {
 				preferences = {
@@ -180,10 +192,12 @@ return {
 					includeCompletionsForImportStatements = true,
 				},
 			},
-		})
-		-- css
-		lspconfig.cssls.setup({
-			capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		}
+
+		-- CSS Language Server
+		vim.lsp.config["cssls"] = {
+			cmd = { "vscode-css-language-server", "--stdio" },
+			capabilities = capabilities,
 			settings = {
 				css = {
 					validate = true,
@@ -204,92 +218,81 @@ return {
 					},
 				},
 			},
-		})
+		}
 
-		-- Enhanced Python: pyright with comprehensive settings
-		local function get_python_path()
-			-- Check for virtual environment first
-			local venv = vim.fn.getenv("VIRTUAL_ENV")
-			if venv and venv ~= vim.NIL then
-				return venv .. "/bin/python"
-			end
-
-			-- Check for conda environment
-			local conda_env = vim.fn.getenv("CONDA_DEFAULT_ENV")
-			if conda_env and conda_env ~= vim.NIL and conda_env ~= "base" then
-				return vim.fn.getenv("CONDA_PREFIX") .. "/bin/python"
-			end
-
-			-- Fallback to system python (when no virtual environment is active)
-			return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
-		end
-
-		lspconfig.pyright.setup({
+		-- Pyright Language Server
+		vim.lsp.config["pyright"] = {
+			cmd = { "pyright-langserver", "--stdio" },
 			capabilities = capabilities,
-			on_attach = function(client, bufnr)
-				-- Prevent LSP from handling formatting since conform does it
-				client.server_capabilities.documentFormattingProvider = false
-				client.server_capabilities.documentRangeFormattingProvider = false
-
-				-- Enable signature help on function calls
-				client.server_capabilities.signatureHelpProvider = {
-					triggerCharacters = { "(", "," },
-					retriggerCharacters = { "," },
-				}
-			end,
 			settings = {
 				python = {
-					-- This is the new pythonPath setting that tells Pyright which Python interpreter to use
 					pythonPath = get_python_path(),
-
-					-- All these settings work together to give you comprehensive Python analysis
 					analysis = {
-						typeCheckingMode = "basic", -- How strict should type checking be
-						autoImportCompletions = true, -- Automatically suggest imports
-						autoSearchPaths = true, -- Automatically find Python packages
-						useLibraryCodeForTypes = true, -- Analyze library source code for better completions
-						diagnosticMode = "openFilesOnly", -- Analyze just open files
-
-						-- These settings dramatically improve completion quality
-						completeFunctionParens = true, -- Add parentheses when completing function names
-						indexing = true, -- Build an index of your codebase for faster searches
-
-						-- Paths for finding type information
+						typeCheckingMode = "basic",
+						autoImportCompletions = true,
+						autoSearchPaths = true,
+						useLibraryCodeForTypes = true,
+						diagnosticMode = "openFilesOnly",
+						completeFunctionParens = true,
+						indexing = true,
 						stubPath = "typings",
 						typeshedPaths = {},
 						extraPaths = {},
 					},
-
-					-- Linting configuration that works alongside completion
 					linting = {
 						enabled = true,
-						pylintEnabled = false, -- Disable if you use other linters like ruff
+						pylintEnabled = false,
 						flake8Enabled = false,
 						mypyEnabled = false,
 					},
 				},
-
-				-- Global pyright settings that affect overall behavior
 				pyright = {
-					disableLanguageServices = false, -- Keep all language features enabled
-					disableOrganizeImports = false, -- Allow Pyright to organize imports
+					disableLanguageServices = false,
+					disableOrganizeImports = false,
 				},
 			},
+			root_markers = {
+				"pyproject.toml",
+				"setup.py",
+				"setup.cfg",
+				"requirements.txt",
+				"Pipfile",
+				"pyrightconfig.json",
+				".git",
+			},
+			single_file_support = true,
+		}
 
-			-- Root directory detection helps Pyright understand your project structure
-			root_dir = function(fname)
-				local util = lspconfig.util
-				return util.root_pattern(
-					"pyproject.toml", -- Modern Python project configuration
-					"setup.py", -- Traditional Python package setup
-					"setup.cfg", -- Alternative setup configuration
-					"requirements.txt", -- Dependency specifications
-					"Pipfile", -- Pipenv environment
-					"pyrightconfig.json", -- Pyright-specific configuration
-					".git" -- Git repository root
-				)(fname)
+		-- Enable all LSP servers
+		vim.lsp.enable({
+			"lua_ls",
+			"emmet_language_server",
+			"denols",
+			"ts_ls",
+			"cssls",
+			"pyright",
+		})
+
+		-- Custom logic for TypeScript vs Deno (since vim.lsp.enable doesn't support conditional logic)
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+			callback = function()
+				local fname = vim.api.nvim_buf_get_name(0)
+				if fname == "" then
+					return
+				end
+
+				-- Check if this is a Deno project
+				local is_deno = lspconfig_util.root_pattern("deno.json", "deno.jsonc")(fname)
+
+				if is_deno then
+					-- Stop ts_ls if running and ensure denols is running
+					vim.lsp.stop_client(vim.lsp.get_clients({ name = "ts_ls" }))
+				else
+					-- Stop denols if running and ensure ts_ls is running
+					vim.lsp.stop_client(vim.lsp.get_clients({ name = "denols" }))
+				end
 			end,
-			single_file_support = true, -- Allow Pyright to work on standalone Python files
 		})
 	end,
 }
